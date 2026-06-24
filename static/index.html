@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text-to-SQL Semantic MVP Dashboard</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="/static/index.css">
+</head>
+<body>
+    <div class="glass-bg"></div>
+    <div class="glow-orb orb-1"></div>
+    <div class="glow-orb orb-2"></div>
+    <div class="glow-orb orb-3"></div>
+
+    <div class="app-container">
+        <!-- Top Navigation Header -->
+        <header class="app-header">
+            <div class="logo">
+                <i class="fa-solid fa-database-arrow-up neon-icon"></i>
+                <div class="logo-text">
+                    <span class="logo-main">ArcticSQL</span>
+                    <span class="logo-sub">Text-to-SQL Semantic Layer MVP</span>
+                </div>
+            </div>
+            <div class="status-panel">
+                <div class="status-item">
+                    <span class="status-dot green"></span>
+                    <span class="status-lbl">Database: <strong>SQLite (sandbox.db)</strong></span>
+                </div>
+                <div class="status-item">
+                    <span class="status-dot blue"></span>
+                    <span class="status-lbl">Embedder: <strong>Arctic-Embed-M</strong></span>
+                </div>
+                <div class="status-item" id="llm-status">
+                    <span class="status-dot purple"></span>
+                    <span class="status-lbl">LLM: <strong>Gemini 3.5</strong></span>
+                </div>
+            </div>
+        </header>
+
+        <div class="main-layout">
+            <!-- Sidebar for Semantic Layer configuration -->
+            <aside class="sidebar-panel">
+                <div class="panel-header">
+                    <h3><i class="fa-solid fa-layer-group"></i> Semantic Domains</h3>
+                    <button class="btn-sm" id="btn-reindex" title="Re-build embeddings cache">
+                        <i class="fa-solid fa-rotate"></i> Re-Index
+                    </button>
+                </div>
+                <div class="domain-selector" id="domain-selector">
+                    <!-- Domain tabs rendered dynamically by app.js from GET /api/domains -->
+                </div>
+                
+                <div class="yaml-editor-container">
+                    <div class="editor-header">
+                        <span><i class="fa-brands fa-markdown"></i> domain_config.yaml</span>
+                        <button class="btn-save" id="btn-save-yaml">
+                            <i class="fa-solid fa-floppy-disk"></i> Save Model
+                        </button>
+                    </div>
+                    <textarea id="yaml-textarea" spellcheck="false" placeholder="Loading semantic domain YAML..."></textarea>
+                </div>
+
+                <div class="schema-browser">
+                    <h4><i class="fa-solid fa-list-check"></i> Whitelisted Tables</h4>
+                    <div id="whitelist-tables-list" class="list-container">
+                        <!-- Filled by JS -->
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Main Interactive Workspace -->
+            <main class="workspace-panel">
+                <!-- User input section -->
+                <section class="query-section card">
+                    <h2><i class="fa-solid fa-wand-magic-sparkles"></i> Ask Your Database</h2>
+                    <p class="section-desc">Query 100+ tables safely via classified semantic boundaries</p>
+                    
+                    <div class="query-input-wrapper">
+                        <input type="text" id="query-input" placeholder="e.g., Show total paid amount by payer last month" autocomplete="off">
+                        <button id="btn-submit-query" class="btn-primary">
+                            <span>Execute</span> <i class="fa-solid fa-paper-plane"></i>
+                        </button>
+                    </div>
+
+                    <div class="suggestions">
+                        <span class="sugg-lbl">Try asking:</span>
+                        <button class="sugg-btn">What is the total paid amount by payer?</button>
+                        <button class="sugg-btn">List all orders of Laptop</button>
+                        <button class="sugg-btn">Find pending claims amount</button>
+                    </div>
+                </section>
+
+                <!-- Processing Pipeline Visualization -->
+                <section class="pipeline-section">
+                    <div class="pipeline-node" id="node-retrieval">
+                        <div class="node-header">
+                            <span class="node-badge">Step 1</span>
+                            <h4>Semantic Schema Retrieval</h4>
+                        </div>
+                        <div class="node-content collapsed" id="content-retrieval">
+                            <div class="retrieval-scores" id="retrieval-scores-list">
+                                <div class="empty-state">Run a query to inspect matched contexts.</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="pipeline-arrow"><i class="fa-solid fa-circle-chevron-down"></i></div>
+
+                    <div class="pipeline-node" id="node-prompt">
+                        <div class="node-header">
+                            <span class="node-badge">Step 2</span>
+                            <h4>Constrained Prompt Builder</h4>
+                        </div>
+                        <div class="node-content collapsed" id="content-prompt">
+                            <pre class="code-preview" id="prompt-preview">Waiting for query...</pre>
+                        </div>
+                    </div>
+
+                    <div class="pipeline-arrow"><i class="fa-solid fa-circle-chevron-down"></i></div>
+
+                    <div class="pipeline-node" id="node-generation">
+                        <div class="node-header">
+                            <span class="node-badge">Step 3</span>
+                            <h4>LLM SQL Generation</h4>
+                        </div>
+                        <div class="node-content collapsed" id="content-generation">
+                            <div class="sql-output-container">
+                                <textarea id="generated-sql-textarea" spellcheck="false"></textarea>
+                                <div class="sql-actions">
+                                    <button class="btn-secondary" id="btn-edit-sql"><i class="fa-solid fa-pen-to-square"></i> Edit SQL</button>
+                                    <button class="btn-primary" id="btn-run-sql"><i class="fa-solid fa-play"></i> Execute Query</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="pipeline-arrow"><i class="fa-solid fa-circle-chevron-down"></i></div>
+
+                    <div class="pipeline-node" id="node-validation">
+                        <div class="node-header">
+                            <span class="node-badge">Step 4</span>
+                            <h4>Safe SQL Validation</h4>
+                        </div>
+                        <div class="node-content collapsed" id="content-validation">
+                            <div id="validation-status-box" class="info-box">
+                                <div class="empty-state">Waiting for generated SQL...</div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Query Results Visualization -->
+                <section class="results-section card" id="results-card">
+                    <div class="results-header">
+                        <h3><i class="fa-solid fa-chart-simple"></i> Query Results</h3>
+                        <div class="view-toggles">
+                            <button class="toggle-btn active" id="btn-view-table"><i class="fa-solid fa-table"></i> Table</button>
+                            <button class="toggle-btn" id="btn-view-chart"><i class="fa-solid fa-chart-line"></i> Chart</button>
+                        </div>
+                    </div>
+
+                    <div class="results-body">
+                        <!-- Table View -->
+                        <div class="table-container" id="results-table-container">
+                            <table class="data-table" id="results-table">
+                                <thead>
+                                    <!-- Filled by JS -->
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td colspan="100%" class="empty-table-state">
+                                            <i class="fa-solid fa-inbox"></i>
+                                            <p>No results executed yet. Run a query above to fetch data.</p>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Chart View -->
+                        <div class="chart-container hidden" id="results-chart-container">
+                            <canvas id="results-chart"></canvas>
+                        </div>
+                    </div>
+                </section>
+            </main>
+        </div>
+    </div>
+
+    <!-- Notification Toast -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <!-- Application Logic -->
+    <script src="/static/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,13 @@
+domain: retail_sales
+description: Retail sales database containing order and product information.
+tables:
+  sales:
+    description: Sales and orders database table containing order, product details,
+      quantity, and price.
+    columns:
+      order_id: Unique identifier for the order.
+      customer_id: Identifier of the customer who made the purchase.
+      product_name: Name of the product sold.
+      quantity: Quantity of items purchased.
+      price: Unit price of the product.
+      order_date: Date when the order was placed.

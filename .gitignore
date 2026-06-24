@@ -1,0 +1,12 @@
+# Environment / secrets
+.env
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+*.egg-info/
+
+# Local database / caches
+sandbox.db
+schema_index.json

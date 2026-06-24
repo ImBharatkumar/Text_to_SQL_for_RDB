@@ -1,0 +1,69 @@
+domain: finance_banking
+description: Banking and financial transactions database covering accounts, customers, loans, transactions, and branches.
+tables:
+  customers:
+    description: Bank customers with personal and contact information.
+    columns:
+      customer_id: Unique identifier for each bank customer.
+      first_name: Customer's first name.
+      last_name: Customer's last name.
+      email: Customer's email address.
+      phone: Customer's contact phone number.
+      date_of_birth: Customer's date of birth.
+      kyc_status: Know-Your-Customer verification status (e.g., Verified, Pending, Rejected).
+
+  accounts:
+    description: Bank accounts held by customers including savings and checking.
+    columns:
+      account_id: Unique identifier for the bank account.
+      customer_id: Customer who owns this account, matches customers.customer_id.
+      account_type: Type of account (e.g., Savings, Checking, Money Market).
+      balance: Current account balance in USD.
+      currency: Currency code (e.g., USD, EUR).
+      opened_date: Date the account was opened.
+      status: Account status (e.g., Active, Frozen, Closed).
+
+  transactions:
+    description: Financial transactions including deposits, withdrawals, and transfers.
+    columns:
+      transaction_id: Unique identifier for the transaction.
+      account_id: Account involved in the transaction, matches accounts.account_id.
+      transaction_type: Type of transaction (e.g., Deposit, Withdrawal, Transfer, Fee).
+      amount: Transaction amount in USD.
+      transaction_date: Date and time the transaction occurred.
+      description: Free-text description of the transaction.
+      reference_number: External reference or confirmation number.
+
+  loans:
+    description: Loan records issued to customers.
+    columns:
+      loan_id: Unique identifier for the loan.
+      customer_id: Customer who took the loan, matches customers.customer_id.
+      loan_type: Type of loan (e.g., Personal, Mortgage, Auto, Student).
+      principal_amount: Original loan amount in USD.
+      interest_rate: Annual interest rate as a percentage.
+      term_months: Loan term duration in months.
+      monthly_payment: Required monthly payment amount.
+      disbursement_date: Date the loan was disbursed.
+      status: Loan status (e.g., Active, Paid Off, Defaulted).
+
+  branches:
+    description: Physical bank branch locations.
+    columns:
+      branch_id: Unique identifier for the branch.
+      branch_name: Name of the branch location.
+      city: City where the branch is located.
+      state: State or province of the branch.
+      address: Street address of the branch.
+      phone: Branch contact phone number.
+
+  credit_cards:
+    description: Credit card accounts linked to bank customers.
+    columns:
+      card_id: Unique credit card identifier.
+      customer_id: Card holder, matches customers.customer_id.
+      card_type: Card tier (e.g., Standard, Gold, Platinum).
+      credit_limit: Maximum credit limit in USD.
+      current_balance: Current outstanding balance.
+      due_date: Next payment due date.
+      rewards_points: Accumulated rewards points.

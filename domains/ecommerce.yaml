@@ -1,0 +1,67 @@
+domain: ecommerce
+description: E-commerce platform database covering products, orders, customers, reviews, and inventory management.
+tables:
+  customers:
+    description: Online shoppers registered on the e-commerce platform.
+    columns:
+      customer_id: Unique identifier for the customer.
+      email: Customer's email address (unique login).
+      username: Customer's display name.
+      registration_date: Date the customer registered.
+      country: Country of the customer.
+      loyalty_tier: Loyalty program tier (e.g., Bronze, Silver, Gold, Platinum).
+
+  products:
+    description: Product catalog with pricing and categorization.
+    columns:
+      product_id: Unique product identifier.
+      name: Product display name.
+      category: Product category (e.g., Electronics, Clothing, Books).
+      brand: Brand or manufacturer name.
+      unit_price: Selling price per unit in USD.
+      cost_price: Procurement cost per unit.
+      sku: Stock keeping unit code.
+      is_active: Whether the product is currently listed (1=yes, 0=no).
+
+  orders:
+    description: Customer purchase orders placed on the platform.
+    columns:
+      order_id: Unique identifier for the order.
+      customer_id: Customer who placed the order, matches customers.customer_id.
+      order_date: Date and time the order was placed.
+      total_amount: Total order value including taxes.
+      discount_amount: Discount applied to the order.
+      shipping_cost: Shipping fee charged.
+      status: Order status (e.g., Pending, Shipped, Delivered, Cancelled, Returned).
+      shipping_address: Full shipping address.
+
+  order_items:
+    description: Individual line items within an order, linking products to orders.
+    columns:
+      item_id: Unique identifier for the line item.
+      order_id: Order this item belongs to, matches orders.order_id.
+      product_id: Product purchased, matches products.product_id.
+      quantity: Number of units ordered.
+      unit_price: Price per unit at time of purchase.
+      subtotal: Total price for this line item (quantity * unit_price).
+
+  reviews:
+    description: Product reviews and ratings submitted by customers.
+    columns:
+      review_id: Unique identifier for the review.
+      product_id: Product being reviewed, matches products.product_id.
+      customer_id: Customer who wrote the review, matches customers.customer_id.
+      rating: Star rating from 1 to 5.
+      review_text: Written review content.
+      review_date: Date the review was posted.
+      helpful_votes: Number of users who found the review helpful.
+
+  inventory:
+    description: Current warehouse stock levels and replenishment info.
+    columns:
+      inventory_id: Unique inventory record identifier.
+      product_id: Product in inventory, matches products.product_id.
+      warehouse_id: Warehouse where stock is held.
+      quantity_on_hand: Units currently available in stock.
+      reorder_level: Minimum threshold to trigger reorder.
+      last_restocked: Date inventory was last replenished.

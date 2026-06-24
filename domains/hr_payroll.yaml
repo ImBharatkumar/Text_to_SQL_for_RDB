@@ -1,0 +1,59 @@
+domain: hr_payroll
+description: Human resources and payroll database covering employees, departments, salaries, leave, and performance.
+tables:
+  employees:
+    description: Employee master records including personal and employment details.
+    columns:
+      employee_id: Unique identifier for the employee.
+      first_name: Employee's first name.
+      last_name: Employee's last name.
+      email: Work email address.
+      hire_date: Date the employee was hired.
+      department_id: Department the employee belongs to, matches departments.department_id.
+      job_title: Employee's current job title.
+      manager_id: Direct manager's employee_id, self-referencing employees.employee_id.
+      employment_type: Employment contract type (e.g., Full-Time, Part-Time, Contractor).
+      status: Employment status (e.g., Active, Terminated, On Leave).
+
+  departments:
+    description: Company departments and cost centers.
+    columns:
+      department_id: Unique identifier for the department.
+      department_name: Name of the department (e.g., Engineering, Finance, HR).
+      location: Office location of the department.
+      head_count: Current number of employees in the department.
+      budget: Annual department budget in USD.
+
+  salaries:
+    description: Salary history and compensation records per employee.
+    columns:
+      salary_id: Unique identifier for the salary record.
+      employee_id: Employee receiving this salary, matches employees.employee_id.
+      base_salary: Annual base salary in USD.
+      bonus: Annual bonus amount.
+      effective_date: Date this salary became effective.
+      end_date: Date this salary record ended (null if current).
+      currency: Salary currency code.
+
+  leave_requests:
+    description: Employee leave and time-off requests.
+    columns:
+      leave_id: Unique identifier for the leave request.
+      employee_id: Employee requesting leave, matches employees.employee_id.
+      leave_type: Type of leave (e.g., Annual, Sick, Maternity, Unpaid).
+      start_date: Leave start date.
+      end_date: Leave end date.
+      days_requested: Total number of leave days requested.
+      status: Approval status (e.g., Pending, Approved, Rejected).
+      approved_by: Manager who approved/rejected, matches employees.employee_id.
+
+  performance_reviews:
+    description: Annual or periodic employee performance evaluations.
+    columns:
+      review_id: Unique identifier for the performance review.
+      employee_id: Employee being reviewed, matches employees.employee_id.
+      reviewer_id: Manager conducting the review, matches employees.employee_id.
+      review_period: Review period label (e.g., Q1-2026, Annual-2025).
+      overall_rating: Numeric rating score (e.g., 1.0 to 5.0).
+      comments: Reviewer comments and feedback.
+      review_date: Date the review was completed.

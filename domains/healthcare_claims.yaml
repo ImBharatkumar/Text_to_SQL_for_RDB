@@ -1,0 +1,34 @@
+domain: healthcare_claims
+description: Healthcare claims database containing member information, claims, payers,
+  and payments.
+tables:
+  members:
+    description: Information about members enrolled in the health plans.
+    columns:
+      member_id: Unique identifier for each member.
+      first_name: First name of the member.
+      last_name: Last name of the member.
+      birth_date: Date of birth of the member.
+  payers:
+    description: Insurers or payers who pay for health claims.
+    columns:
+      payer_id: Unique identifier for the payer.
+      name: Name of the payer organization.
+      type: Type of payer (e.g. government, commercial).
+  claims:
+    description: Healthcare claims submitted by providers for services.
+    columns:
+      claim_id: Unique identifier for the claim.
+      member_id: Member who received the services, matches members.member_id.
+      payer_id: Payer responsible for the claim, matches payers.payer_id.
+      service_date: Date when services were rendered.
+      amount: Total dollar amount of the claim.
+      status: Current status of the claim (e.g., Paid, Pending, Denied).
+  payments:
+    description: Payment transactions mapping to claims.
+    columns:
+      payment_id: Unique payment identifier.
+      claim_id: Claim that this payment belongs to, matches claims.claim_id.
+      amount: Amount paid.
+      payment_date: Date when payment was executed.
+      method: Payment method (e.g., Check, EFT).

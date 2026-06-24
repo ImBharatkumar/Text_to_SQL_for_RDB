@@ -1,0 +1,55 @@
+domain: logistics
+description: Logistics and supply chain database covering shipments, carriers, warehouses, routes, and delivery tracking.
+tables:
+  shipments:
+    description: Shipment records tracking packages from origin to destination.
+    columns:
+      shipment_id: Unique identifier for the shipment.
+      origin_warehouse_id: Source warehouse, matches warehouses.warehouse_id.
+      destination_address: Full delivery address.
+      carrier_id: Carrier handling the shipment, matches carriers.carrier_id.
+      route_id: Route used for this shipment, matches routes.route_id.
+      weight_kg: Package weight in kilograms.
+      status: Shipment status (e.g., Picked Up, In Transit, Out for Delivery, Delivered, Failed).
+      shipped_date: Date the shipment was dispatched.
+      estimated_delivery: Expected delivery date.
+      actual_delivery: Actual date of delivery (null if not yet delivered).
+
+  carriers:
+    description: Logistics and courier service providers.
+    columns:
+      carrier_id: Unique carrier identifier.
+      carrier_name: Name of the carrier company.
+      service_type: Service level (e.g., Standard, Express, Overnight).
+      contact_email: Carrier contact email.
+      rating: Carrier performance rating out of 5.
+
+  warehouses:
+    description: Storage and distribution center locations.
+    columns:
+      warehouse_id: Unique warehouse identifier.
+      warehouse_name: Name of the warehouse facility.
+      city: City where the warehouse is located.
+      state: State/region of the warehouse.
+      capacity_units: Maximum storage capacity in units.
+      current_utilization: Current storage utilization percentage.
+
+  routes:
+    description: Predefined delivery routes between locations.
+    columns:
+      route_id: Unique route identifier.
+      origin_city: Departure city of the route.
+      destination_city: Arrival city of the route.
+      distance_km: Total route distance in kilometers.
+      estimated_hours: Estimated travel time in hours.
+      active: Whether the route is currently active (1=yes, 0=no).
+
+  tracking_events:
+    description: Individual tracking events and status updates for shipments.
+    columns:
+      event_id: Unique event identifier.
+      shipment_id: Shipment this event belongs to, matches shipments.shipment_id.
+      event_type: Type of event (e.g., Picked Up, Arrived at Hub, Out for Delivery).
+      event_timestamp: Date and time of the event.
+      location: Location where the event occurred.
+      notes: Additional notes or exception details.

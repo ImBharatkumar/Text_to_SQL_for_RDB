@@ -1,0 +1,65 @@
+domain: education
+description: Educational institution database covering students, courses, enrollments, instructors, and grades.
+tables:
+  students:
+    description: Student records including demographics and enrollment status.
+    columns:
+      student_id: Unique identifier for the student.
+      first_name: Student's first name.
+      last_name: Student's last name.
+      email: Student's email address.
+      enrollment_date: Date the student enrolled at the institution.
+      program: Academic program or major (e.g., Computer Science, Business, Nursing).
+      gpa: Current cumulative GPA on a 4.0 scale.
+      status: Enrollment status (e.g., Active, Graduated, Dropped, On Hold).
+
+  instructors:
+    description: Faculty and instructors teaching courses.
+    columns:
+      instructor_id: Unique identifier for the instructor.
+      first_name: Instructor's first name.
+      last_name: Instructor's last name.
+      email: Instructor's institutional email.
+      department: Academic department the instructor belongs to.
+      rank: Academic rank (e.g., Lecturer, Assistant Professor, Associate Professor, Professor).
+      hire_date: Date the instructor was hired.
+
+  courses:
+    description: Academic courses offered by the institution.
+    columns:
+      course_id: Unique identifier for the course.
+      course_code: Short alphanumeric code for the course (e.g., CS101, BUS302).
+      course_name: Full name of the course.
+      credits: Number of academic credit hours.
+      department: Department offering the course.
+      instructor_id: Instructor teaching the course, matches instructors.instructor_id.
+      semester: Semester when the course is offered (e.g., Fall-2025, Spring-2026).
+      max_enrollment: Maximum number of students allowed.
+
+  enrollments:
+    description: Student course enrollment records.
+    columns:
+      enrollment_id: Unique identifier for the enrollment record.
+      student_id: Enrolled student, matches students.student_id.
+      course_id: Course enrolled in, matches courses.course_id.
+      enrollment_date: Date the student enrolled in the course.
+      status: Enrollment status (e.g., Enrolled, Withdrawn, Completed).
+
+  grades:
+    description: Student grades and academic performance per course.
+    columns:
+      grade_id: Unique identifier for the grade record.
+      enrollment_id: Enrollment this grade belongs to, matches enrollments.enrollment_id.
+      assessment_type: Type of assessment (e.g., Midterm, Final, Assignment, Quiz).
+      score: Raw score achieved.
+      max_score: Maximum possible score.
+      letter_grade: Final letter grade (e.g., A, B+, C, F).
+      graded_date: Date the grade was recorded.
+
+  attendance:
+    description: Student class attendance records.
+    columns:
+      attendance_id: Unique attendance record identifier.
+      enrollment_id: Enrollment record, matches enrollments.enrollment_id.
+      class_date: Date of the class session.
+      status: Attendance status (e.g., Present, Absent, Late, Excused).
