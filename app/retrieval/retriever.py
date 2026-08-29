@@ -4,7 +4,8 @@ import numpy as np
 from typing import List, Dict, Any
 from sentence_transformers import SentenceTransformer
 
-CACHE_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "schema_index.json")
+ROOT_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+CACHE_PATH = os.path.join(ROOT_DIR, "schema_index.json")
 MODEL_NAME = "snowflake/snowflake-arctic-embed-m-v1.5"
 
 class SchemaRetriever:

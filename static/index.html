@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Text-to-SQL Semantic MVP Dashboard</title>
+    <title>ArcticSQL — Text-to-SQL & Python Sandbox Agent</title>
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -24,16 +24,16 @@
         <!-- Top Navigation Header -->
         <header class="app-header">
             <div class="logo">
-                <i class="fa-solid fa-database-arrow-up neon-icon"></i>
+                <i class="fa-solid fa-robot neon-icon"></i>
                 <div class="logo-text">
                     <span class="logo-main">ArcticSQL</span>
-                    <span class="logo-sub">Text-to-SQL Semantic Layer MVP</span>
+                    <span class="logo-sub">Agentic Python Sandbox & Text-to-SQL Platform</span>
                 </div>
             </div>
             <div class="status-panel">
                 <div class="status-item">
                     <span class="status-dot green"></span>
-                    <span class="status-lbl">Database: <strong>SQLite (sandbox.db)</strong></span>
+                    <span class="status-lbl">Database: <strong>SQLite (33 tables)</strong></span>
                 </div>
                 <div class="status-item">
                     <span class="status-dot blue"></span>
@@ -41,7 +41,7 @@
                 </div>
                 <div class="status-item" id="llm-status">
                     <span class="status-dot purple"></span>
-                    <span class="status-lbl">LLM: <strong>Gemini 3.5</strong></span>
+                    <span class="status-lbl">Agent LLM: <strong>Gemini 2.5 Flash</strong></span>
                 </div>
             </div>
         </header>
@@ -81,78 +81,106 @@
             <main class="workspace-panel">
                 <!-- User input section -->
                 <section class="query-section card">
-                    <h2><i class="fa-solid fa-wand-magic-sparkles"></i> Ask Your Database</h2>
-                    <p class="section-desc">Query 100+ tables safely via classified semantic boundaries</p>
+                    <div class="section-header-flex">
+                        <div>
+                            <h2><i class="fa-solid fa-wand-magic-sparkles"></i> Ask Your Database</h2>
+                            <p class="section-desc">Autonomous multi-step reasoning, Python sandbox execution & self-repair</p>
+                        </div>
+                        <div class="mode-selector">
+                            <button id="mode-agent" class="mode-btn active" title="Agent writes Python code with self-repair & tool calls">
+                                <i class="fa-solid fa-terminal"></i> Python Sandbox Agent
+                            </button>
+                            <button id="mode-sql" class="mode-btn" title="Single-pass direct SQL generation">
+                                <i class="fa-solid fa-bolt"></i> Direct SQL Mode
+                            </button>
+                        </div>
+                    </div>
                     
                     <div class="query-input-wrapper">
-                        <input type="text" id="query-input" placeholder="e.g., Show total paid amount by payer last month" autocomplete="off">
+                        <input type="text" id="query-input" placeholder="e.g., Calculate total revenue by product category and find top customer" autocomplete="off">
                         <button id="btn-submit-query" class="btn-primary">
-                            <span>Execute</span> <i class="fa-solid fa-paper-plane"></i>
+                            <span>Execute Agent</span> <i class="fa-solid fa-paper-plane"></i>
                         </button>
                     </div>
 
                     <div class="suggestions">
                         <span class="sugg-lbl">Try asking:</span>
-                        <button class="sugg-btn">What is the total paid amount by payer?</button>
-                        <button class="sugg-btn">List all orders of Laptop</button>
-                        <button class="sugg-btn">Find pending claims amount</button>
+                        <button class="sugg-btn">Calculate total revenue per product category</button>
+                        <button class="sugg-btn">Which department has the highest budget vs salary payroll?</button>
+                        <button class="sugg-btn">Find patients with pending healthcare claims over $500</button>
                     </div>
                 </section>
 
                 <!-- Processing Pipeline Visualization -->
                 <section class="pipeline-section">
-                    <div class="pipeline-node" id="node-retrieval">
+                    <!-- Agent Trajectory Node (Visible in Agent Mode) -->
+                    <div class="pipeline-node" id="node-agent-trajectory">
                         <div class="node-header">
-                            <span class="node-badge">Step 1</span>
-                            <h4>Semantic Schema Retrieval</h4>
+                            <span class="node-badge purple">Agent Trace</span>
+                            <h4><i class="fa-solid fa-code-branch"></i> LLM Agent Execution Trajectory & Self-Repair Timeline</h4>
                         </div>
-                        <div class="node-content collapsed" id="content-retrieval">
-                            <div class="retrieval-scores" id="retrieval-scores-list">
-                                <div class="empty-state">Run a query to inspect matched contexts.</div>
+                        <div class="node-content" id="content-agent-trajectory">
+                            <div id="agent-trajectory-container">
+                                <div class="empty-state">Run an Agent query to inspect real-time LLM thoughts, code steps, and repair loops.</div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="pipeline-arrow"><i class="fa-solid fa-circle-chevron-down"></i></div>
-
-                    <div class="pipeline-node" id="node-prompt">
-                        <div class="node-header">
-                            <span class="node-badge">Step 2</span>
-                            <h4>Constrained Prompt Builder</h4>
-                        </div>
-                        <div class="node-content collapsed" id="content-prompt">
-                            <pre class="code-preview" id="prompt-preview">Waiting for query...</pre>
-                        </div>
-                    </div>
-
-                    <div class="pipeline-arrow"><i class="fa-solid fa-circle-chevron-down"></i></div>
-
-                    <div class="pipeline-node" id="node-generation">
-                        <div class="node-header">
-                            <span class="node-badge">Step 3</span>
-                            <h4>LLM SQL Generation</h4>
-                        </div>
-                        <div class="node-content collapsed" id="content-generation">
-                            <div class="sql-output-container">
-                                <textarea id="generated-sql-textarea" spellcheck="false"></textarea>
-                                <div class="sql-actions">
-                                    <button class="btn-secondary" id="btn-edit-sql"><i class="fa-solid fa-pen-to-square"></i> Edit SQL</button>
-                                    <button class="btn-primary" id="btn-run-sql"><i class="fa-solid fa-play"></i> Execute Query</button>
+                    <!-- Direct SQL Step Nodes (Visible in Direct SQL Mode) -->
+                    <div id="direct-sql-nodes" class="hidden">
+                        <div class="pipeline-node" id="node-retrieval">
+                            <div class="node-header">
+                                <span class="node-badge">Step 1</span>
+                                <h4>Semantic Schema Retrieval</h4>
+                            </div>
+                            <div class="node-content collapsed" id="content-retrieval">
+                                <div class="retrieval-scores" id="retrieval-scores-list">
+                                    <div class="empty-state">Run a query to inspect matched contexts.</div>
                                 </div>
                             </div>
                         </div>
-                    </div>
 
-                    <div class="pipeline-arrow"><i class="fa-solid fa-circle-chevron-down"></i></div>
+                        <div class="pipeline-arrow"><i class="fa-solid fa-circle-chevron-down"></i></div>
 
-                    <div class="pipeline-node" id="node-validation">
-                        <div class="node-header">
-                            <span class="node-badge">Step 4</span>
-                            <h4>Safe SQL Validation</h4>
+                        <div class="pipeline-node" id="node-prompt">
+                            <div class="node-header">
+                                <span class="node-badge">Step 2</span>
+                                <h4>Constrained Prompt Builder</h4>
+                            </div>
+                            <div class="node-content collapsed" id="content-prompt">
+                                <pre class="code-preview" id="prompt-preview">Waiting for query...</pre>
+                            </div>
                         </div>
-                        <div class="node-content collapsed" id="content-validation">
-                            <div id="validation-status-box" class="info-box">
-                                <div class="empty-state">Waiting for generated SQL...</div>
+
+                        <div class="pipeline-arrow"><i class="fa-solid fa-circle-chevron-down"></i></div>
+
+                        <div class="pipeline-node" id="node-generation">
+                            <div class="node-header">
+                                <span class="node-badge">Step 3</span>
+                                <h4>LLM SQL Generation</h4>
+                            </div>
+                            <div class="node-content collapsed" id="content-generation">
+                                <div class="sql-output-container">
+                                    <textarea id="generated-sql-textarea" spellcheck="false"></textarea>
+                                    <div class="sql-actions">
+                                        <button class="btn-secondary" id="btn-edit-sql"><i class="fa-solid fa-pen-to-square"></i> Edit SQL</button>
+                                        <button class="btn-primary" id="btn-run-sql"><i class="fa-solid fa-play"></i> Execute Query</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="pipeline-arrow"><i class="fa-solid fa-circle-chevron-down"></i></div>
+
+                        <div class="pipeline-node" id="node-validation">
+                            <div class="node-header">
+                                <span class="node-badge">Step 4</span>
+                                <h4>Safe SQL Validation</h4>
+                            </div>
+                            <div class="node-content collapsed" id="content-validation">
+                                <div id="validation-status-box" class="info-box">
+                                    <div class="empty-state">Waiting for generated SQL...</div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -161,9 +189,9 @@
                 <!-- Query Results Visualization -->
                 <section class="results-section card" id="results-card">
                     <div class="results-header">
-                        <h3><i class="fa-solid fa-chart-simple"></i> Query Results</h3>
+                        <h3><i class="fa-solid fa-chart-simple"></i> Execution Output & Results</h3>
                         <div class="view-toggles">
-                            <button class="toggle-btn active" id="btn-view-table"><i class="fa-solid fa-table"></i> Table</button>
+                            <button class="toggle-btn active" id="btn-view-table"><i class="fa-solid fa-table"></i> Table / Output</button>
                             <button class="toggle-btn" id="btn-view-chart"><i class="fa-solid fa-chart-line"></i> Chart</button>
                         </div>
                     </div>

@@ -10,3 +10,4 @@ __pycache__/
 # Local database / caches
 sandbox.db
 schema_index.json
+INTERVIEW_GUIDE.md

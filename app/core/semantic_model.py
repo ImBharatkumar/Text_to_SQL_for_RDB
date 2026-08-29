@@ -68,7 +68,7 @@ DEFAULT_DOMAINS = {
         "domain": "ecommerce",
         "description": "E-commerce platform database covering products, orders, customers, reviews, and inventory management.",
         "tables": {
-            "customers": {
+            "ec_customers": {
                 "description": "Online shoppers registered on the e-commerce platform.",
                 "columns": {
                     "customer_id": "Unique identifier for the customer.",
@@ -96,7 +96,7 @@ DEFAULT_DOMAINS = {
                 "description": "Customer purchase orders placed on the platform.",
                 "columns": {
                     "order_id": "Unique identifier for the order.",
-                    "customer_id": "Customer who placed the order, matches customers.customer_id.",
+                    "customer_id": "Customer who placed the order, matches ec_customers.customer_id.",
                     "order_date": "Date and time the order was placed.",
                     "total_amount": "Total order value including taxes.",
                     "discount_amount": "Discount applied to the order.",
@@ -121,7 +121,7 @@ DEFAULT_DOMAINS = {
                 "columns": {
                     "review_id": "Unique identifier for the review.",
                     "product_id": "Product being reviewed, matches products.product_id.",
-                    "customer_id": "Customer who wrote the review, matches customers.customer_id.",
+                    "customer_id": "Customer who wrote the review, matches ec_customers.customer_id.",
                     "rating": "Star rating from 1 to 5.",
                     "review_text": "Written review content.",
                     "review_date": "Date the review was posted.",
@@ -145,7 +145,7 @@ DEFAULT_DOMAINS = {
         "domain": "finance_banking",
         "description": "Banking and financial transactions database covering accounts, customers, loans, transactions, and branches.",
         "tables": {
-            "customers": {
+            "bank_customers": {
                 "description": "Bank customers with personal and contact information.",
                 "columns": {
                     "customer_id": "Unique identifier for each bank customer.",
@@ -161,7 +161,7 @@ DEFAULT_DOMAINS = {
                 "description": "Bank accounts held by customers including savings and checking.",
                 "columns": {
                     "account_id": "Unique identifier for the bank account.",
-                    "customer_id": "Customer who owns this account, matches customers.customer_id.",
+                    "customer_id": "Customer who owns this account, matches bank_customers.customer_id.",
                     "account_type": "Type of account (e.g., Savings, Checking, Money Market).",
                     "balance": "Current account balance in USD.",
                     "currency": "Currency code (e.g., USD, EUR).",
@@ -185,7 +185,7 @@ DEFAULT_DOMAINS = {
                 "description": "Loan records issued to customers.",
                 "columns": {
                     "loan_id": "Unique identifier for the loan.",
-                    "customer_id": "Customer who took the loan, matches customers.customer_id.",
+                    "customer_id": "Customer who took the loan, matches bank_customers.customer_id.",
                     "loan_type": "Type of loan (e.g., Personal, Mortgage, Auto, Student).",
                     "principal_amount": "Original loan amount in USD.",
                     "interest_rate": "Annual interest rate as a percentage.",
@@ -210,7 +210,7 @@ DEFAULT_DOMAINS = {
                 "description": "Credit card accounts linked to bank customers.",
                 "columns": {
                     "card_id": "Unique credit card identifier.",
-                    "customer_id": "Card holder, matches customers.customer_id.",
+                    "customer_id": "Card holder, matches bank_customers.customer_id.",
                     "card_type": "Card tier (e.g., Standard, Gold, Platinum).",
                     "credit_limit": "Maximum credit limit in USD.",
                     "current_balance": "Current outstanding balance.",

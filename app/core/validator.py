@@ -21,7 +21,7 @@ DEFAULT_WHITELIST_TABLES = {
     # --- logistics ---
     "carriers", "warehouses", "routes", "shipments", "tracking_events",
     # --- education ---
-    "students", "instructors", "courses", "enrollments", "grades", "attendance",
+    "students", "instructors", "courses", "enrollments", "grades", "attendance","departments"
 }
 
 def validate_sql(sql: str, whitelist_tables: Set[str] = DEFAULT_WHITELIST_TABLES, max_limit: int = 100) -> Tuple[bool, str, str]:

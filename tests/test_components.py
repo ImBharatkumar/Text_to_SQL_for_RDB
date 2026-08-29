@@ -2,12 +2,12 @@ import os
 import sys
 
 # Add current directory to path
-sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-import database as db
-import semantic_model as sm
-from validator import validate_sql
-from retriever import SchemaRetriever
+import app.core.database as db
+import app.core.semantic_model as sm
+from app.core.validator import validate_sql
+from app.retrieval.retriever import SchemaRetriever
 
 def test_database():
     print("\n--- Testing Database ---")
@@ -47,7 +47,7 @@ def test_validator():
 def test_semantic_model_and_retriever():
     print("\n--- Testing Semantic Model & Retriever ---")
     # Setup temp/default domains
-    domains_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "domains")
+    domains_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "domains")
     os.makedirs(domains_dir, exist_ok=True)
     sm.init_default_domains(domains_dir)
     

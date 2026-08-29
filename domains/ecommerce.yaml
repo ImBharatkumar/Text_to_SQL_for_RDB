@@ -1,7 +1,7 @@
 domain: ecommerce
 description: E-commerce platform database covering products, orders, customers, reviews, and inventory management.
 tables:
-  customers:
+  ec_customers:
     description: Online shoppers registered on the e-commerce platform.
     columns:
       customer_id: Unique identifier for the customer.
@@ -27,7 +27,7 @@ tables:
     description: Customer purchase orders placed on the platform.
     columns:
       order_id: Unique identifier for the order.
-      customer_id: Customer who placed the order, matches customers.customer_id.
+      customer_id: Customer who placed the order, matches ec_customers.customer_id.
       order_date: Date and time the order was placed.
       total_amount: Total order value including taxes.
       discount_amount: Discount applied to the order.
@@ -50,7 +50,7 @@ tables:
     columns:
       review_id: Unique identifier for the review.
       product_id: Product being reviewed, matches products.product_id.
-      customer_id: Customer who wrote the review, matches customers.customer_id.
+      customer_id: Customer who wrote the review, matches ec_customers.customer_id.
       rating: Star rating from 1 to 5.
       review_text: Written review content.
       review_date: Date the review was posted.

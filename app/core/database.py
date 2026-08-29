@@ -2,7 +2,8 @@ import sqlite3
 import os
 from typing import List, Dict, Any
 
-DB_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "sandbox.db")
+ROOT_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+DB_PATH = os.path.join(ROOT_DIR, "sandbox.db")
 
 def get_connection():
     """Returns a connection to the SQLite database."""

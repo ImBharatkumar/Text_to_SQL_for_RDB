@@ -3,10 +3,10 @@ import sys
 from fastapi.testclient import TestClient
 
 # Add current directory to path
-sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from main import app
-import database as db
+from app.main import app
+import app.core.database as db
 
 client = TestClient(app)
 
