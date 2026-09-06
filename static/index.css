@@ -95,17 +95,6 @@ body {
     100% { transform: translate(50px, 30px) scale(1.1); }
 }
 
-/* --- APP CONTAINER LAYOUT --- */
-.app-container {
-    max-width: 1600px;
-    margin: 0 auto;
-    padding: 1.5rem;
-    display: flex;
-    flex-direction: column;
-    height: 100vh;
-    max-height: 100vh;
-}
-
 /* --- APP HEADER --- */
 .app-header {
     display: flex;
@@ -119,6 +108,7 @@ body {
     border-radius: 16px;
     margin-bottom: 1.5rem;
     box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+    width: 100%;
 }
 
 .logo {
@@ -131,6 +121,7 @@ body {
     font-size: 1.75rem;
     background: linear-gradient(135deg, var(--accent-purple), var(--accent-blue));
     -webkit-background-clip: text;
+    background-clip: text;
     -webkit-text-fill-color: transparent;
     filter: drop-shadow(0 0 8px rgba(157, 78, 221, 0.5));
 }
@@ -147,6 +138,7 @@ body {
     letter-spacing: 0.5px;
     background: linear-gradient(to right, #fff, #b4b6db);
     -webkit-background-clip: text;
+    background-clip: text;
     -webkit-text-fill-color: transparent;
 }
 
@@ -183,18 +175,35 @@ body {
 .status-dot.blue { background-color: var(--accent-blue); box-shadow: var(--glow-blue); }
 .status-dot.purple { background-color: var(--accent-purple); box-shadow: var(--glow-purple); }
 
+/* --- APP CONTAINER LAYOUT --- */
+.app-container {
+    max-width: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 1rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    max-height: 100vh;
+    box-sizing: border-box;
+}
+
 /* --- MAIN WORKSPACE LAYOUT --- */
 .main-layout {
-    display: grid;
-    grid-template-columns: 360px 1fr;
-    gap: 1.5rem;
+    display: flex;
+    gap: 0.75rem;
     flex: 1;
     overflow: hidden;
     min-height: 0;
+    width: 100%;
 }
 
 /* --- SIDEBAR PANEL --- */
 .sidebar-panel {
+    width: 360px;
+    min-width: 220px;
+    max-width: 650px;
+    flex-shrink: 0;
     background: var(--bg-card);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
@@ -204,6 +213,54 @@ body {
     display: flex;
     flex-direction: column;
     gap: 1.25rem;
+    overflow-y: auto;
+}
+
+/* --- RESIZER HANDLE --- */
+.resizer-handle {
+    width: 10px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 6px;
+    cursor: col-resize;
+    transition: background 0.2s, box-shadow 0.2s, width 0.2s;
+    user-select: none;
+    touch-action: none;
+    flex-shrink: 0;
+    margin: 0 0.15rem;
+    align-self: stretch;
+    z-index: 100;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.resizer-handle::after {
+    content: '⋮';
+    color: rgba(255, 255, 255, 0.4);
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.resizer-handle:hover,
+.resizer-handle.resizing {
+    background: var(--accent-purple);
+    box-shadow: var(--glow-purple);
+    width: 12px;
+}
+
+.resizer-handle:hover::after,
+.resizer-handle.resizing::after {
+    color: #ffffff;
+}
+
+.workspace-panel {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
     overflow-y: auto;
 }
 

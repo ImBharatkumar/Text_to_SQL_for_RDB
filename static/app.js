@@ -58,6 +58,45 @@ document.addEventListener('DOMContentLoaded', () => {
     const btnViewTable = document.getElementById('btn-view-table');
     const btnViewChart = document.getElementById('btn-view-chart');
 
+    // Sidebar Resizer Drag Logic (Pointer Events + Pointer Capture)
+    const sidebarPanel = document.querySelector('.sidebar-panel');
+    const resizerHandle = document.getElementById('resizer-handle');
+
+    if (resizerHandle && sidebarPanel) {
+        let isResizing = false;
+
+        resizerHandle.addEventListener('pointerdown', (e) => {
+            isResizing = true;
+            resizerHandle.classList.add('resizing');
+            try { resizerHandle.setPointerCapture(e.pointerId); } catch (_) {}
+            document.body.style.cursor = 'col-resize';
+            document.body.style.userSelect = 'none';
+        });
+
+        resizerHandle.addEventListener('pointermove', (e) => {
+            if (!isResizing) return;
+            const sidebarLeft = sidebarPanel.getBoundingClientRect().left;
+            const newWidth = e.clientX - sidebarLeft;
+            if (newWidth >= 180 && newWidth <= 850) {
+                sidebarPanel.style.width = `${newWidth}px`;
+                sidebarPanel.style.flexBasis = `${newWidth}px`;
+            }
+        });
+
+        const stopResize = (e) => {
+            if (isResizing) {
+                isResizing = false;
+                resizerHandle.classList.remove('resizing');
+                try { resizerHandle.releasePointerCapture(e.pointerId); } catch (_) {}
+                document.body.style.cursor = 'default';
+                document.body.style.userSelect = 'auto';
+            }
+        };
+
+        resizerHandle.addEventListener('pointerup', stopResize);
+        resizerHandle.addEventListener('pointercancel', stopResize);
+    }
+
     /* --- MODE SWITCHING --- */
     modeAgentBtn.addEventListener('click', () => {
         currentMode = 'agent';
